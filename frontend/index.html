@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StatusPulse · Task Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" id="statusDot"></span>
+      <span class="brand-name">StatusPulse</span>
+    </div>
+    <div class="tiers">
+      <span class="tier-pill">frontend</span>
+      <span class="arrow">→</span>
+      <span class="tier-pill">api</span>
+      <span class="arrow">→</span>
+      <span class="tier-pill" id="dbPill">db</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h1>Three tiers. One pipeline.</h1>
+      <p id="apiStatusLine">checking backend…</p>
+    </section>
+
+    <section class="panel">
+      <form id="taskForm" class="task-form">
+        <input id="taskInput" type="text" placeholder="add a task…" autocomplete="off" />
+        <button type="submit">add</button>
+      </form>
+
+      <ul id="taskList" class="task-list"></ul>
+      <p id="emptyState" class="empty-state" hidden>no tasks yet — add the first one above</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>built on push · github → jenkins → dockerhub → minikube</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
