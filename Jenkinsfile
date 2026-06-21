@@ -25,7 +25,7 @@ pipeline {
         // i.e. wherever %USERPROFILE%\.kube\config actually lives.
         // Only needed if Jenkins runs as a different account than that user
         // (e.g. as a Windows service under Local System).
-        KUBECONFIG        = "C:\\Users\\YOUR_WINDOWS_USERNAME\\.kube\\config"
+        KUBECONFIG = "C:\\Users\\arjun\\.kube\\config"
     }
 
     stages {
