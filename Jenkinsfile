@@ -22,6 +22,11 @@ pipeline {
         BACKEND_IMAGE     = "${DOCKERHUB_USER}/statuspulse-backend"
         FRONTEND_IMAGE    = "${DOCKERHUB_USER}/statuspulse-frontend"
         KUBE_NAMESPACE    = "statuspulse"
+        // EDIT THIS: must match the Windows user that ran `minikube start`,
+        // i.e. wherever %USERPROFILE%\.kube\config actually lives.
+        // Only needed if Jenkins runs as a different account than that user
+        // (e.g. as a Windows service under Local System).
+        KUBECONFIG        = "C:\\Users\\YOUR_WINDOWS_USERNAME\\.kube\\config"
     }
 
     stages {
@@ -51,6 +56,16 @@ pipeline {
                 bat "docker push %BACKEND_IMAGE%:latest"
                 bat "docker push %FRONTEND_IMAGE%:%IMAGE_TAG%"
                 bat "docker push %FRONTEND_IMAGE%:latest"
+            }
+        }
+
+        stage('Verify kubectl Context') {
+            steps {
+                // Fails fast with a clear signal if Jenkins can't see the
+                // minikube kubeconfig, instead of failing later on a
+                // confusing "Authentication required" HTML response.
+                bat "kubectl config current-context"
+                bat "kubectl get nodes"
             }
         }
 
