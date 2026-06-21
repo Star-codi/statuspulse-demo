@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: statuspulse
 spec:
   replicas: 2
   selector:
@@ -16,7 +15,7 @@ spec:
       containers:
         - name: frontend
           # Jenkins overrides this tag each build with:
-          #   kubectl set image deployment/frontend frontend=<DOCKERHUB_USER>/statuspulse-frontend:<BUILD_NUMBER> -n statuspulse
+          #   kubectl set image deployment/frontend frontend=<DOCKERHUB_USER>/statuspulse-frontend:<BUILD_NUMBER>
           image: DOCKERHUB_USERNAME/statuspulse-frontend:latest
           ports:
             - containerPort: 80
@@ -34,7 +33,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
-  namespace: statuspulse
 spec:
   type: NodePort
   selector:

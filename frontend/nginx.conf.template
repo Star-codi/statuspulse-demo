@@ -12,7 +12,7 @@ server {
     # Proxy API calls to the backend (business logic) tier.
     # BACKEND_HOST is templated in by docker-entrypoint at container start.
     location /api/ {
-        proxy_pass http://BACKEND_HOST:5000/api/;
+        proxy_pass http://$BACKEND_HOST:5000/api/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }

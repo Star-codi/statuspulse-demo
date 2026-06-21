@@ -130,7 +130,6 @@ kubectl config use-context minikube
 
 First-ever deploy (Jenkins also runs this every build, it's idempotent):
 ```bash
-kubectl apply -f k8s/00-namespace.yaml
 kubectl apply -f k8s/01-secrets.yaml
 kubectl apply -f k8s/02-db.yaml
 kubectl apply -f k8s/03-backend.yaml
@@ -139,12 +138,12 @@ kubectl apply -f k8s/04-frontend.yaml
 
 View the app:
 ```bash
-minikube service frontend -n statuspulse
+minikube service frontend
 ```
 
 Watch the rollout:
 ```bash
-kubectl get pods -n statuspulse -w
+kubectl get pods -w
 ```
 
 ---
@@ -156,9 +155,9 @@ kubectl get pods -n statuspulse -w
 3. Jenkins triggers (webhook or poll), builds both images tagged with the
    build number, pushes them to DockerHub, then runs `kubectl set image`
    against the Minikube deployments.
-4. `kubectl rollout status deployment/frontend -n statuspulse` confirms
+4. `kubectl rollout status deployment/frontend` confirms
    the new pods are up.
-5. Refresh `minikube service frontend -n statuspulse` in the browser.
+5. Refresh `minikube service frontend` in the browser.
 
 ---
 

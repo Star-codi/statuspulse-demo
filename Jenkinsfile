@@ -21,12 +21,11 @@ pipeline {
         IMAGE_TAG         = "${env.BUILD_NUMBER}"
         BACKEND_IMAGE     = "${DOCKERHUB_USER}/statuspulse-backend"
         FRONTEND_IMAGE    = "${DOCKERHUB_USER}/statuspulse-frontend"
-        KUBE_NAMESPACE    = "statuspulse"
         // EDIT THIS: must match the Windows user that ran `minikube start`,
         // i.e. wherever %USERPROFILE%\.kube\config actually lives.
         // Only needed if Jenkins runs as a different account than that user
         // (e.g. as a Windows service under Local System).
-        KUBECONFIG = "C:\\Users\\arjun\\.kube\\config"
+        KUBECONFIG        = "C:\\Users\\YOUR_WINDOWS_USERNAME\\.kube\\config"
     }
 
     stages {
@@ -74,7 +73,6 @@ pipeline {
                 // Safe to re-run every build: creates anything missing,
                 // no-ops on anything unchanged. Actual image rollout happens
                 // in the next stage via `kubectl set image`.
-                bat "kubectl apply -f k8s/00-namespace.yaml"
                 bat "kubectl apply -f k8s/01-secrets.yaml"
                 bat "kubectl apply -f k8s/02-db.yaml"
                 bat "kubectl apply -f k8s/03-backend.yaml"
@@ -84,17 +82,17 @@ pipeline {
 
         stage('Deploy to Minikube') {
             steps {
-                bat "kubectl set image deployment/backend backend=%BACKEND_IMAGE%:%IMAGE_TAG% -n %KUBE_NAMESPACE%"
-                bat "kubectl set image deployment/frontend frontend=%FRONTEND_IMAGE%:%IMAGE_TAG% -n %KUBE_NAMESPACE%"
-                bat "kubectl rollout status deployment/backend -n %KUBE_NAMESPACE% --timeout=120s"
-                bat "kubectl rollout status deployment/frontend -n %KUBE_NAMESPACE% --timeout=120s"
+                bat "kubectl set image deployment/backend backend=%BACKEND_IMAGE%:%IMAGE_TAG%"
+                bat "kubectl set image deployment/frontend frontend=%FRONTEND_IMAGE%:%IMAGE_TAG%"
+                bat "kubectl rollout status deployment/backend --timeout=120s"
+                bat "kubectl rollout status deployment/frontend --timeout=120s"
             }
         }
     }
 
     post {
         success {
-            echo "Deployed build #${env.BUILD_NUMBER}. Run: minikube service frontend -n ${KUBE_NAMESPACE}"
+            echo "Deployed build #${env.BUILD_NUMBER}. Run: minikube service frontend"
         }
         failure {
             echo "Pipeline failed - check the stage logs above."
